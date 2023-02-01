@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:th="https://thymeleaf.org">
+<html lang="en" xmlns:th="https://thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
@@ -12,7 +12,7 @@
 <body>
   <div class="container mt-5">
     <div class="float-end">
-      <a th:href="@{/add}" class="btn btn-primary">Add Employee</a>
+      <a sec:authorize="hasRole('ADMIN')" th:href="@{/add}" class="btn btn-primary">Add Employee</a>
       <button type="button" class="btn btn-primary">Logout</button>
     </div>
     <h1 class="text-center">Employee Management System</h1>
@@ -24,19 +24,20 @@
           <th>Designation</th>
           <th>Department</th>
           <th>Salary</th>
-          <th></th>
-          <th></th>
+          <th sec:authorize="hasRole('ADMIN')">Actions</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody sec:authorise="hasRole('USER','ADMIN')">
         <tr th:each="employee: ${listEmployees} ">
           <td th:text="${employee.id}"></td>
           <td th:text="${employee.firstName} +' '+ ${employee.lastName}"></td>
           <td th:text="${employee.designation}"></td>
           <td th:text="${employee.department}"></td>
           <td>$ <span th:text="${employee.salary}"></span></td>
-          <td><a th:href="@{/edit/{id}(id=${employee.id})}" class="border-0 bg-transparent"><i class="fa-solid fa-pen-to-square"></i></a></td>
-          <td><a th:href="@{/delete/{id}(id=${employee.id})}" class="border-0 bg-transparent"><i class="fa-solid fa-trash-can"></i></a></td>
+          <td sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/edit/{id}(id=${employee.id})}" class="border-0 bg-transparent"><i class="fa-solid fa-pen-to-square"></i></a>
+            <a th:href="@{/delete/{id}(id=${employee.id})}" class="border-0 bg-transparent"><i class="fa-solid fa-trash-can"></i></a>
+          </td>
         </tr>
       </tbody>
     </table>

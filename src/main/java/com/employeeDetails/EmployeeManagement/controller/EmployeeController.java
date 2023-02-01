@@ -1,10 +1,10 @@
 package com.employeeDetails.EmployeeManagement.controller;
 
 import com.employeeDetails.EmployeeManagement.model.Employee;
+import com.employeeDetails.EmployeeManagement.repository.UserRepository;
 import com.employeeDetails.EmployeeManagement.service.EmployeeService;
-import com.employeeDetails.EmployeeManagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,21 +12,20 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class EmployeeController {
 
-    @Autowired
     private EmployeeService employeeService;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserService userService;
 
-//    @GetMapping("/")
-//    public String login(){
-//        return "login";
-//    }
+    public EmployeeController(EmployeeService employeeService,
+                              UserRepository userRepository) {
+        this.employeeService = employeeService;
+        this.userRepository = userRepository;
+    }
 
-    @GetMapping("/")
+    @GetMapping("/index")
     public String index(Model model){
-        System.out.println(userService.findByUsername("admin"));
         model.addAttribute("listEmployees",employeeService.getAllEmployees());
+        System.out.println(model.getAttribute("listEmployees"));
         return "index";
     }
 
